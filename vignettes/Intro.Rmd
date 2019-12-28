@@ -1,0 +1,66 @@
+---
+title: "Intro"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Intro}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(FARS.package)
+```
+
+This package is used to perform specific analyis on the Fatality Analyis Reporting System. Data inlcuded with the package is throught years 2013-2015. Analysis possible inlcude development of tibble that allows comparison of fatalities by year, and, development of state map with locations of all fatalities plotted for a year.
+
+##Loading FARS data
+While the FARS dataset is broad, the analysis in this package use only a few parameters available.
+
+For more info on the data, see the [NHTSA FARS Manuals & Documentation page](https://crashstats.nhtsa.dot.gov/#/DocumentTypeList/4). 
+
+###Make File Name
+The make_filename function takes a numeric as input and returns a character string which serves as a filename for that year.
+
+``` {r echo=TRUE}
+fars_2013 <- make_filename(2013)
+fars_2013
+```
+This is then used in conjuction with other functions in the package for analysis
+
+###Single Years
+For single years, use the fars_read with the output of make_filename as the input, then pipe that to fars_read_years().
+
+``` {r echo=TRUE}
+FARS_14 <- make_filename(2014)%>%
+  fars_read()%>%
+  fars_read_years()
+```
+
+###Multiple Years
+The pacakge is really centred on the functions fars_summarize_years, and fars_map_state, each of which have the first three functions, make_filename, fars_read, and, fars_read_years, embedded within them.
+Hence, in order to assess multiple years and to create maps of all fatal collisions within a state, one need only use these functions as is, without having to perform the tasks described above.
+
+fars_summarize_years() will return a tibble with the month as rows and the years as columns, and the number of fatal auto collisions during those months and years listed.
+
+``` {r multiple years, echo=TRUE}
+fars_summarize_years(2013:2015)
+```
+
+fars_map_state() will return a plot of the locations of all fatal auto collisions for a state during that year.
+
+```{r state plot, ech0=TRUE}
+fars_map_state(12, 2013)
+```
+
+
+
+
+
+
